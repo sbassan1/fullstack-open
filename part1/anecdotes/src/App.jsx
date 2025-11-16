@@ -18,17 +18,27 @@ const App = () => {
     'The only way to go fast, is to go well.'
   ]
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0));
+
 
   const nextAnecdote = () => {
-    if (selected < anecdotes.length) {
-      setSelected(selected+1);
-    } 
+    setSelected((selected + 1) % anecdotes.length);
   }
+
+  const voteForAnecdote = () => {
+    const votesCopy = [...votes];
+    votesCopy[selected] += 1;
+    setVotes(votesCopy);
+  };
+
 
   return (
     <div>
       {anecdotes[selected]}
       <br />
+      has {votes[selected]} votes
+      <br />
+      <Button action={voteForAnecdote} title='vote'></Button>
       <Button action={nextAnecdote} title='next anecdote'></Button>
     </div>
   )
