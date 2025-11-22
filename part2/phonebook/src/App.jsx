@@ -8,6 +8,22 @@ const Filter = ({ filterValue, handleFilterChange }) => {
   )
 }
 
+const PersonForm = ({newName, handleNameInputChange, newNumber, handleNumberInputChange, addNewPerson}) => {
+  return (
+  <form>  
+    <div>
+      name: <input onChange={handleNameInputChange} value={newName} />
+    </div>
+    <div>
+      number: <input onChange={handleNumberInputChange} value={newNumber} />
+    </div>
+    <div>
+      <button type="submit" onClick={addNewPerson}>add</button>
+    </div>
+  </form>
+  )
+}
+
 const Names = ({persons}) => {
   return (
     <div>
@@ -19,6 +35,7 @@ const Names = ({persons}) => {
     </div>
   )
 }
+
 
 const App = () => {
   
@@ -50,7 +67,7 @@ const App = () => {
     alert(`${newName} added to the phonebook!`);
     
     setNewName('');
-    setNewNumber(0);
+    setNewNumber('');
   }
 
   const handleNameInputChange = (event) => {
@@ -75,17 +92,7 @@ const App = () => {
       <Filter filterValue={filter} handleFilterChange={handleFilterChange}></Filter>
       
       <h2>add a new</h2>
-      <form>  
-        <div>
-          name: <input onChange={handleNameInputChange} value={newName} />
-        </div>
-        <div>
-          number: <input onChange={handleNumberInputChange} value={newNumber} />
-        </div>
-        <div>
-          <button type="submit" onClick={addNewPerson}>add</button>
-        </div>
-      </form>
+      <PersonForm newName={newName} newNumber={newNumber} handleNameInputChange={handleNameInputChange} handleNumberInputChange={handleNumberInputChange} addNewPerson={addNewPerson} ></PersonForm>
 
       <h2>Numbers</h2>
       <Names persons={personsToShow}></Names>
