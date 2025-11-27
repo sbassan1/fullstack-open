@@ -1,55 +1,28 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
-const Filter = ({ filterValue, handleFilterChange }) => {
-  return(
-    <div>
-      <p>filter shown with  <input type="text" value={filterValue} onChange={handleFilterChange}/> </p>
-    </div>
-  )
-}
-
-const PersonForm = ({newName, handleNameInputChange, newNumber, handleNumberInputChange, addNewPerson}) => {
-  return (
-  <form>  
-    <div>
-      name: <input onChange={handleNameInputChange} value={newName} />
-    </div>
-    <div>
-      number: <input onChange={handleNumberInputChange} value={newNumber} />
-    </div>
-    <div>
-      <button type="submit" onClick={addNewPerson}>add</button>
-    </div>
-  </form>
-  )
-}
-
-const Names = ({persons}) => {
-  return (
-    <div>
-      {
-        persons.map( person => (
-          <p key={person.name}>{person.name} {person.number}</p>
-        ))
-      }
-    </div>
-  )
-}
+import Names from './components/Names'
+import PersonForm from './components/PersonForm'
+import Filter from './components/Filter'
 
 
 const App = () => {
-  
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ])
-  
+  const [persons, setPersons] = useState([])
   
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
+
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled')
+        setPersons(response.data)
+      })
+  }, [])
+  console.log('render', persons.length, 'notes')
 
 
   const addNewPerson = (event) => {
