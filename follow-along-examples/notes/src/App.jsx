@@ -11,8 +11,8 @@ const App = () => {
 
   useEffect(() => {
     noteService.getAll()
-      .then(response => {
-        setNotes(response.data)
+        .then(initialNotes => {
+        setNotes(initialNotes)
       })
   }, [])
   console.log('render', notes.length, 'notes')
@@ -21,10 +21,18 @@ const App = () => {
     const note = notes.find(n => n.id === id)
     const changedNote = { ...note, important: !note.important }
 
-    noteService.update(id, changedNote)
-      .then(response => {
-        setNotes(notes.map(note => note.id === id ? response.data : note))
-      })
+    noteService
+    .update(id, changedNote).then(returnedNote => {
+      setNotes(notes.map(note => note.id === id ? returnedNote : note))
+    })
+    // eslint-disable-next-line no-unused-vars
+    .catch(error => {
+      alert(
+        `the note '${note.content}' was already deleted from server`
+      )
+      setNotes(notes.filter(n => n.id !== id))
+    })
+
   }
 
   const addNote = event => {
@@ -35,9 +43,10 @@ const App = () => {
       important: Math.random() < 0.5,
     }
     
-    noteService.create(noteObject)
-      .then(response => {
-        setNotes(notes.concat(response.data))
+    noteService
+      .create(noteObject)
+      .then(returnedNote => {
+        setNotes(notes.concat(returnedNote))
         setNewNote('')
       })
   }
