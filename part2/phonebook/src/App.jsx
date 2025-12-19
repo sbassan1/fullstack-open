@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 
 import Names from './components/Names'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
+
+import personsService from './services/persons.js'
 
 
 const App = () => {
@@ -15,19 +16,16 @@ const App = () => {
 
   useEffect(() => {
     console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
-      })
+    personsService.getAll()
+    .then(personsInitial => {
+      setPersons(personsInitial)
+    })
   }, [])
-  console.log('render', persons.length, 'notes')
 
+  console.log('render', persons.length, 'notes')
 
   const addNewPerson = (event) => {
     event.preventDefault()
-
     const nameExists = persons.some(person => person.name === newName.trim())
 
     if (nameExists) {
@@ -35,12 +33,14 @@ const App = () => {
       return
     }
 
-    setPersons(persons.concat({ name: newName, number: newNumber, id: persons.length + 1 }));
+    personsService.create({ name: newName, number: newNumber, id: persons.length + 1 })
+    .then(newContact => {
+      setPersons(persons.concat(newContact));
+      setNewName('');
+      setNewNumber('');
+    })
 
     alert(`${newName} added to the phonebook!`);
-    
-    setNewName('');
-    setNewNumber('');
   }
 
   const handleNameInputChange = (event) => {
