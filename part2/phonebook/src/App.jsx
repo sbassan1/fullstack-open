@@ -33,7 +33,7 @@ const App = () => {
       return
     }
 
-    personsService.create({ name: newName, number: newNumber, id: persons.length + 1 })
+    personsService.create({ name: newName, number: newNumber, id: String(persons.length + 1) })
     .then(newContact => {
       setPersons(persons.concat(newContact));
       setNewName('');
@@ -55,6 +55,21 @@ const App = () => {
     setFilter(event.target.value);
   }
 
+  const deletePerson = (id, name) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      personsService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(p => p.id !== id));
+        })
+        // eslint-disable-next-line no-unused-vars
+        .catch(error => {
+          alert('This person was already deleted from the server');
+          setPersons(persons.filter(p => p.id !== id));
+        });
+    }
+  };
+
   const personsToShow = persons.filter(person => 
     person.name.toLowerCase().includes(filter.toLowerCase())
   );
@@ -68,7 +83,7 @@ const App = () => {
       <PersonForm newName={newName} newNumber={newNumber} handleNameInputChange={handleNameInputChange} handleNumberInputChange={handleNumberInputChange} addNewPerson={addNewPerson} ></PersonForm>
 
       <h2>Numbers</h2>
-      <Names persons={personsToShow}></Names>
+      <Names persons={personsToShow} deletePerson={deletePerson}></Names>
       
     </div>
   )
