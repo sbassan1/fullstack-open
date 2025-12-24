@@ -25,23 +25,41 @@ const App = () => {
   console.log('render', persons.length, 'notes')
 
   const addNewPerson = (event) => {
-    event.preventDefault()
-    const nameExists = persons.some(person => person.name === newName.trim())
+    event.preventDefault();
+    const personExisting = persons.find(p => p.name === newName);
 
-    if (nameExists) {
-      alert(`${newName} is already in the phonebook!`)
-      return
+    if (personExisting) {
+      const confirmUpdate = window.confirm(
+        `${newName} is already in the phonebook, replace old number with a new one?`
+      );
+
+      if (confirmUpdate) {
+        const updatedContact = { ...personExisting, number: newNumber };
+
+        personsService
+          .update(personExisting.id, updatedContact)
+          .then(returnedPerson => {
+            setPersons(persons.map(p => p.id !== personExisting.id ? p : returnedPerson));
+            setNewName('');
+            setNewNumber('');
+          })
+          .catch(() => {
+            alert(`Error: ${newName} was already deleted from the server`);
+            setPersons(persons.filter(p => p.id !== personExisting.id));
+          });
+      }
+      return; 
     }
 
-    personsService.create({ name: newName, number: newNumber, id: String(persons.length + 1) })
-    .then(newContact => {
-      setPersons(persons.concat(newContact));
-      setNewName('');
-      setNewNumber('');
-    })
-
-    alert(`${newName} added to the phonebook!`);
-  }
+    personsService
+      .create({ name: newName, number: newNumber , id: String(persons.length + 1)})
+      .then(newContact => {
+        setPersons(persons.concat(newContact));
+        setNewName('');
+        setNewNumber('');
+        alert(`${newName} added to the phonebook!`);
+      });
+  };
 
   const handleNameInputChange = (event) => {
     setNewName((event.target.value))
