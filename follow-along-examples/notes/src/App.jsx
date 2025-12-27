@@ -1,13 +1,19 @@
 import { useState, useEffect } from 'react'
 import Note from './components/Note'
+import Footer from './components/Footer'
 
 import noteService from './services/notes.js'
+import Notification from './components/Notification'
+
 
 
 const App = () => {
+  
   const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
+  const [errorMessage, setErrorMessage] = useState('some error happened...')
+
 
   useEffect(() => {
     noteService.getAll()
@@ -17,28 +23,31 @@ const App = () => {
   }, [])
   console.log('render', notes.length, 'notes')
 
+
   const toggleImportanceOf = (id) => {
     const note = notes.find(n => n.id === id)
     const changedNote = { ...note, important: !note.important }
 
     noteService
-    .update(id, changedNote).then(returnedNote => {
-      setNotes(notes.map(note => note.id === id ? returnedNote : note))
-    })
-    // eslint-disable-next-line no-unused-vars
-    .catch(error => {
-      alert(
-        `the note '${note.content}' was already deleted from server`
-      )
-      setNotes(notes.filter(n => n.id !== id))
-    })
-
+      .update(id, changedNote).then(returnedNote => {
+        setNotes(notes.map(note => note.id !== id ? note : returnedNote))
+      })
+      // eslint-disable-next-line no-unused-vars
+      .catch(error => {
+        setErrorMessage(
+          `Note '${note.content}' was already removed from server`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        setNotes(notes.filter(n => n.id !== id))
+      })
   }
 
   const addNote = event => {
     event.preventDefault()
     const noteObject = {
-      id: notes.length + 1, 
+      id: String(notes.length + 1), 
       content: newNote,
       important: Math.random() < 0.5,
     }
@@ -60,9 +69,10 @@ const App = () => {
   return (
     <div>
       <h1>Notes</h1>
+      <Notification message={errorMessage} />
       <div>
         <button onClick={() => setShowAll(!showAll)}>
-          show {showAll ? 'important' : 'all'}
+          show {showAll ? 'all' : 'important'}
         </button>
       </div>
       <ul>
@@ -78,6 +88,8 @@ const App = () => {
         <input value={newNote} onChange={handleNoteChange} />
         <button type="submit">save</button>
       </form>
+
+      <Footer />
     </div>
   )
 }

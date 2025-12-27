@@ -3,7 +3,7 @@
     {
       "id": "1",
       "content": "HTML is easy",
-      "important": true
+      "important": false
     },
     {
       "id": "2",
@@ -16,34 +16,14 @@
       "important": true
     },
     {
-      "id": "2614",
-      "content": "Hello!",
+      "id": "4",
+      "content": "Test",
       "important": true
     },
     {
-      "id": "be83",
-      "content": "Hello!",
-      "important": true
-    },
-    {
-      "id": "50cb",
-      "content": "Testing",
-      "important": true
-    },
-    {
-      "id": "5c18",
-      "content": "Trying if the notes update properly",
-      "important": true
-    },
-    {
-      "id": "65d7",
-      "content": "They did!",
-      "important": true
-    },
-    {
-      "id": 9,
-      "content": "Added a note with id 9 (if i'm good with math)",
-      "important": true
+      "id": "5",
+      "content": "Note",
+      "important": false
     }
   ]
 }
