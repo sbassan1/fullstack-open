@@ -55,8 +55,7 @@ const App = () => {
             setNewNumber('');
           })
           .catch(() => {
-
-            setMessage(`Error: ${newName} was already deleted from the server`)
+            setMessage(`Information of ${newName} has already been removed from server`)
             setNotificationType('error')
             setTimeout(() => {
               setMessage(``)
@@ -117,7 +116,7 @@ const App = () => {
         // eslint-disable-next-line no-unused-vars
         .catch(error => {
 
-          setMessage(`Error: ${name} was already deleted from the server'`)
+          setMessage(`Information of ${name} has already been removed from server`)
           setNotificationType('error')
           setTimeout(() => {
             setMessage(``)
