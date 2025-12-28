@@ -89,7 +89,8 @@ const App = () => {
         <button type="submit">save</button>
       </form>
 
-      <Footer />
+    <Footer />
+
     </div>
   )
 }

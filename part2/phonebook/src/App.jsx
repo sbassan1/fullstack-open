@@ -3,12 +3,15 @@ import { useState, useEffect } from 'react'
 import Names from './components/Names'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
+import Notification from './components/Notification.jsx'
 
 import personsService from './services/persons.js'
 
 
 const App = () => {
   const [persons, setPersons] = useState([])
+  const [message, setMessage] = useState('')
+  const [notificationType, setNotificationType] = useState('empty')
   
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('');
@@ -39,12 +42,27 @@ const App = () => {
         personsService
           .update(personExisting.id, updatedContact)
           .then(returnedPerson => {
+          
+            setMessage(`Replaced ${newName} with new number`)
+            setNotificationType('success')
+            setTimeout(() => {
+              setMessage(``)
+              setNotificationType('empty')
+            }, 5000)
+            
             setPersons(persons.map(p => p.id !== personExisting.id ? p : returnedPerson));
             setNewName('');
             setNewNumber('');
           })
           .catch(() => {
-            alert(`Error: ${newName} was already deleted from the server`);
+
+            setMessage(`Error: ${newName} was already deleted from the server`)
+            setNotificationType('error')
+            setTimeout(() => {
+              setMessage(``)
+              setNotificationType('empty')
+            }, 5000)
+            
             setPersons(persons.filter(p => p.id !== personExisting.id));
           });
       }
@@ -57,7 +75,15 @@ const App = () => {
         setPersons(persons.concat(newContact));
         setNewName('');
         setNewNumber('');
-        alert(`${newName} added to the phonebook!`);
+
+
+        setMessage(`Added ${newName}`)
+        setNotificationType('success')
+        setTimeout(() => {
+          setMessage(``)
+          setNotificationType('empty')
+        }, 5000)
+      
       });
   };
 
@@ -79,10 +105,25 @@ const App = () => {
         .remove(id)
         .then(() => {
           setPersons(persons.filter(p => p.id !== id));
+
+          setMessage(`${name} deleted from phonebook successfully`)
+          setNotificationType('success')
+          setTimeout(() => {
+            setMessage(``)
+            setNotificationType('empty')
+          }, 5000)
+
         })
         // eslint-disable-next-line no-unused-vars
         .catch(error => {
-          alert('This person was already deleted from the server');
+
+          setMessage(`Error: ${name} was already deleted from the server'`)
+          setNotificationType('error')
+          setTimeout(() => {
+            setMessage(``)
+            setNotificationType('empty')
+          }, 5000)
+          
           setPersons(persons.filter(p => p.id !== id));
         });
     }
@@ -97,6 +138,8 @@ const App = () => {
       <h2>Phonebook</h2>
       <Filter filterValue={filter} handleFilterChange={handleFilterChange}></Filter>
       
+      <Notification message={message} type={notificationType}></Notification>
+
       <h2>add a new</h2>
       <PersonForm newName={newName} newNumber={newNumber} handleNameInputChange={handleNameInputChange} handleNumberInputChange={handleNumberInputChange} addNewPerson={addNewPerson} ></PersonForm>
 
