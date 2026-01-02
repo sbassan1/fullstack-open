@@ -16,14 +16,14 @@ const CountryList = ({ inputValue, allCountries}) => {
     const country = countriesToShow[0];
     console.log(country)
     return (
-      <CountryCard country={country}></CountryCard>
+      <CountryCard country={country} initialState={true} ></CountryCard>
     );
   }
 
   return (
     <div>
       {countriesToShow.map((country) => (
-        <CountryCard country={country}></CountryCard>
+        <CountryCard country={country} initialState={false}></CountryCard>
       ))}
     </div>
   );

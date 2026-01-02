@@ -1,8 +1,8 @@
 import { useState } from "react"
 
 
-const CountryCard = ({ country }) => {
-    const [show, setShow] = useState(false)
+const CountryCard = ({ country, initialState }) => {
+    const [show, setShow] = useState(initialState)
 
     const changeShow = () => {
         setShow(!show)
