@@ -7,8 +7,8 @@ POST http://localhost:3001/api/persons/ HTTP/1.1
 content-type: application/json
 
 {
-    "name": "Santiago Bassani",
-    "number": "11-FAKEPHONENUMBER!!"
+
+    "name": "Santiago"
 }
 
 
