@@ -36,12 +36,21 @@ const generateId = () => {
 // ----------------------- GET ----------------------------------------
 
 app.get("/api/persons", (request, response) => {
-  response.json(data);
+    response.json(data);
 });
+
+app.get("/info", (request,response) => {
+    const date = new Date()
+    response.send(`
+        <p>Phonebook has info for ${data.length} people</p> 
+        ${String(date)}
+        `)
+    response.send()
+})
 
 // ----------------------- PRINTS ----------------------------------------
 
 const PORT = 3001;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
