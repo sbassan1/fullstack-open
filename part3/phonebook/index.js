@@ -1,7 +1,19 @@
 const express = require("express");
 const app = express();
 
+var morgan = require('morgan')
 app.use(express.json());
+
+
+morgan.token('body', (req, res) => {
+  if (req.method === 'POST') {
+    return JSON.stringify(req.body)
+  }
+  return '' 
+})
+
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
 let data = [
   {
@@ -60,15 +72,22 @@ app.get("/api/persons/:id", (request, response) => {
 
 // ----------------------- POST ----------------------------------------
 
-app.post("/api/persons", (request, response) => {
+
+app.post("/api/persons/", (request, response) => {
   const body = request.body;
+
+  if (!body) {
+    return response.status(400).json({ 
+      error: "request body is missing or malformed" 
+    });
+  }
 
   if (!body.name || !body.number) {
     return response.status(400).json({
       error: "number or name missing",
     });
   }
-
+  
   if (data.find((person) => person.name === body.name)) {
     return response.status(400).json({ error: "name must be unique" });
   }

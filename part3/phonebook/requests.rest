@@ -7,10 +7,10 @@ POST http://localhost:3001/api/persons/ HTTP/1.1
 content-type: application/json
 
 {
-
-    "name": "Santiago"
+    "name": "Santiago Bassani",
+    "number": "1231231"
 }
 
 
 ###
-DELETE  http://localhost:3001/api/persons/4 HTTP/1.1
+DELETE  http://localhost:3001/api/persons/5 HTTP/1.1
